@@ -1,16 +1,22 @@
-# [GRUPI NIMI] — [PROJEKTI PEALKIRI]
-
-> **Juhend:** Asenda kõik nurksulgudes vormid oma sisuga enne esitamist. Kustuta see juhendrida.
+# AGRA — Väärtpaberiportfelli jälgimine
 
 ## Äriküsimus
 
-[Kirjelda ühe-kahe lausega, millise andmetega seotud probleemi te lahendate ja kes sellest kasu saab.]
+Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese portfelli alusel, arvestades, et hiljem saavad ka teised tiimiliikmed enda aktsiaportfellidega liituda.
 
 **Mõõdikud:**
 
-1. [Esimene KPI või mõõdik — näiteks: päevane müük poe kohta]
-2. [Teine KPI või mõõdik]
-3. [Kolmas KPI või mõõdik — vabatahtlik]
+1. Portfelli kogutootlus (%) - Näitab kogu portfelli kasvu valitud perioodil
+2. Päevane / nädalane / kuine tootlus - Võimaldab jälgida lühiajalist muutust
+3. Average Buy price - kaalutud keskmine
+4. Realiseeritud kasum/kahjum - Kui palju kasumit teeniti müüdud positsioonidest
+5. Realiseerimata kasum/kahjum - Avatud positsioonide hetkeseis
+6. Tehingute arv perioodis
+7. Keskmine hoidmisperiood 
+8. P/E Ratio - Price / Earnings
+9. Dividend Yield - Dividenditootlus
+10. Market Cap - Ettevõtte suurus
+
 
 ## Arhitektuur
 
@@ -29,17 +35,17 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---------|------|--------------|------|
-| [Andmeallika nimi] | [API / fail / andmebaas] | Jah, [iga tund / päevas / muu] | Põhiandmevoog |
-| [Teise allika nimi] | [seed / dim-tabel] | Ei, staatiline | Kõrvaltabel |
+| väärtpaberite info Python paketist | API| | Jah,  iga päev  | Põhiandmevoog 
+| Investeerimisportfelli seis | Exceli tabel| Jah, kui toimub tehing | Kõrvaltabel |
 
 ## Stack
 
 | Komponent | Tööriist |
 |-----------|---------|
-| Sissevõtt | [Python / Airflow / muu] |
-| Transformatsioon | [SQL / dbt / muu] |
+| Sissevõtt | Python, Excel|
+| Transformatsioon | SQL / dbt / ???|
 | Andmehoidla | PostgreSQL |
-| Näidikulaud | [Superset / Streamlit / muu] |
+| Näidikulaud | Power BI  |
 | Orkestreerimine | [Airflow / cron / muu] |
 
 ## Käivitamine
@@ -122,7 +128,7 @@ Testide tulemused: [kuhu salvestatakse / kuidas vaadata]
 
 | Nimi | Roll |
 |------|------|
-| [Nimi 1] | [Roll] |
-| [Nimi 2] | [Roll] |
-| [Nimi 3] | [Roll] |
-| [Nimi 4] | [Roll — vabatahtlik] |
+| Gerdo German  | Kvaliteedi omanik|
+| Rait Käpp | Andmeallika omanik |
+| Aleksandra Kuld  | Transformatsioonide omanik |
+| Annela Velleste | Näidikulaua omanik |
