@@ -1,23 +1,21 @@
-# Arhitektuur
-
-> **Juhend:** See fail on projektitöö esimese nädala väljund. Asenda kõik nurksulgudes plankid oma projekti tegeliku sisuga. Kustuta see juhendrida.
+# AGRA — Väärtpaberiportfelli jälgimine
 
 ## Äriküsimus
 
-[Kirjuta ühe-kahe lausega oma äriküsimus täpselt. Näiteks: "Millistes kauplustes ja mis kellaaegadel on müügitõhusus (käive külastaja kohta) kõrgeim?"]
+Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese portfelli alusel, arvestades, et hiljem saavad ka teised tiimiliikmed enda aktsiaportfellidega liituda.
 
-## Mõõdikud
+**Mõõdikud:**
 
-1. [Esimene mõõdik — kirjelda, mida arvutate ja kuidas]
-2. [Teine mõõdik]
-3. [Kolmas mõõdik — vabatahtlik]
-
-## Andmeallikad
-
-| Allikas | Tüüp | Ajas muutuv? | Roll |
-|---------|------|--------------|------|
-| [Nimi] | [API / CSV / DB] | Jah, [iga X tundi / päeva] | [Milleks kasutatakse?] |
-| [Nimi] | [seed / dim-tabel] | Ei, staatiline | [Milleks kasutatakse?] |
+1. Portfelli kogutootlus (%) - Näitab kogu portfelli kasvu valitud perioodil
+2. Päevane / nädalane / kuine tootlus - Võimaldab jälgida lühiajalist muutust
+3. Average Buy price - kaalutud keskmine
+4. Realiseeritud kasum/kahjum - Kui palju kasumit teeniti müüdud positsioonidest
+5. Realiseerimata kasum/kahjum - Avatud positsioonide hetkeseis
+6. Tehingute arv perioodis
+7. Keskmine hoidmisperiood 
+8. P/E Ratio - Price / Earnings
+9. Dividend Yield - Dividenditootlus
+10. Market Cap - Ettevõtte suurus
 
 ## Andmevoog
 
@@ -45,10 +43,10 @@ flowchart LR
 
 | Roll | Vastutus | Täitja |
 |------|----------|--------|
-| Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | [Nimi] |
-| Transformatsioonide omanik | Kirjutab mart kihi mudelid ja mõõdikute arvutuse | [Nimi] |
-| Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | [Nimi] |
-| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | [Nimi] |
+| Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | Rait Käpp |
+| Transformatsioonide omanik | Kirjutab mart kihi mudelid ja mõõdikute arvutuse | Aleksandra Kuld |
+| Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | Gerdo German |
+| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | Annela Velleste |
 
 ## Riskid
 
