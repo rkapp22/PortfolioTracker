@@ -34,9 +34,9 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 ## Andmestik
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
-|---------|------|--------------|------|
-| väärtpaberite info Python paketist | API | Jah,  iga päev  | Põhiandmevoog |
-| Investeerimisportfelli seis | Exceli tabel| Jah, kui toimub tehing | Kõrvaltabel |
+|---|---|---|---|
+| väärtpaberite info Python paketist | API | Jah, iga päev | Põhiandmevoog |
+| Investeerimisportfelli seis | Exceli tabel | Jah, kui toimub tehing | Kõrvaltabel |
 
 ## Stack
 
