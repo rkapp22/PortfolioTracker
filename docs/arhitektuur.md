@@ -21,41 +21,46 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 
 ```mermaid
 flowchart LR
-    source[Andmeallikas] --> ingest[Sissevõtt]
-    ingest --> staging[(staging)]
-    staging --> transform[Transformatsioon]
-    transform --> mart[(mart)]
-    mart --> dashboard[Näidikulaud]
+    source[API https://stooq.com/] --> ingest[Python laadimine]
+    source2[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
+    source3[API https://www.alphavantage.co] --> ingest
+    source4[aktsiaportfelli Excel] --> ingest
+    ingest --> staging[(PostgreSQL staging tabelid)]
+    staging --> transform[Python transofrmatsioonid]
+    transform --> mart[(PostgreSQL DWH tabelid)]
+    mart --> semantic_model[(PowerBI Semantiline mudel)]
+    semantic_model --> dashboard[PowerBI näidikulaud]
     mart --> quality[Andmekvaliteedi testid]
-    scheduler[Scheduler] --> ingest
+    scheduler[Cron Scheduler] --> ingest
 ```
 
-> Täpsusta diagrammi vastavalt oma projektile — lisa rohkem andmeallikaid, mudeleid või teenuseid.
 
 ## Andmebaasi kihid
 
 | Kiht | Roll |
 |------|------|
-| `staging` | Hoiab allika andmeid töötlemata kujul. |
-| `mart` | Hoiab transformeeritud ja ärilogikat sisaldavaid tabeleid. |
+| `staging` | Hoiab allika andmeid töötlemata kujul |
+| `dwh` | Hoiab transformeeritud ja ärilogikat sisaldavaid tabeleid |
+| `Semantiline mudel` | hoiab näidikulaua andmemudelit |
 
 ## Tööjaotus
 
 | Roll | Vastutus | Täitja |
 |------|----------|--------|
-| Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | Rait Käpp |
-| Transformatsioonide omanik | Kirjutab mart kihi mudelid ja mõõdikute arvutuse | Aleksandra Kuld |
-| Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | Gerdo German |
-| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | Annela Velleste |
+| Infra omanik | Paneb üles Docker'i lahenduse | Rait Käpp |
+| Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | Gerdo Germann |
+| Transformatsioonide omanik | Kirjutab DWH kihi mudelid ja mõõdikute arvutuse | Aleksandra Kuld, Rait Käpp |
+| Kvaliteedi omanik | Kirjeldab testide loogika, realiseerib testid ja vaatab läbi ebaõnnestunud kontrollid | Annela Velleste, Gerdo Germann |
+| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | Annela Velleste, Aleksandra Kuld |
 
 ## Riskid
 
 | Risk | Mõju | Maandus |
 |------|------|---------|
-| [Risk 1 — näiteks: API ei vasta] | [Mis juhtub?] | [Kuidas maandad?] |
-| [Risk 2] | [Mis juhtub?] | [Kuidas maandad?] |
-| [Risk 3] | [Mis juhtub?] | [Kuidas maandad?] |
+| API ei vasta | värske andmete seis on puudu | teatud arv korduspäringuid. enne ei kustata staging kihist eelmsit seisu, kui uus on olemas |
+| API tagastab ebakvaliteetse sisu | oht kahjustada andlao infot | laadimisprotseduur peab kontrollima uut infot enne üle kirjutamist |
+| Teadlik või ettevaatamatu eksitud andmelaos |  andmete terviklikus rikutud, valed otsused | järgmise laadimisega saab korda, seniks hoitustede näidikulaual |
 
 ## Privaatsus ja turve
 
-[Kirjelda, millised isiku- või tundlikud andmed teie projektis esinevad (kui üldse) ja kuidas neid kaitsete. Isikuandmed peavad olema anonümiseeritud. Andmebaasi paroolid peavad tulema `.env` failist.]
+Lahendus ei sisalda isikuandmeid. Sisaldab tundlikke andmeid (investeerimisportfelli ostud ja müügid - "aktsiaportfelli Excel"). Andmebaasi paroolid tulevad `.env` failist. Lahendus on plaanitud jooksma kasutaja lokaalses arvutis, Docker'i konteineris ning ei publitseeri avalikku võrku midagi. 
