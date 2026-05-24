@@ -34,9 +34,9 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 ## Andmestik
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
-|---------|------|--------------|------|
-| väärtpaberite info Python paketist | API| | Jah,  iga päev  | Põhiandmevoog 
-| Investeerimisportfelli seis | Exceli tabel| Jah, kui toimub tehing | Kõrvaltabel |
+|---|---|---|---|
+| väärtpaberite info Python paketist | API | Jah, iga päev | Põhiandmevoog |
+| Investeerimisportfelli seis | Exceli tabel | Jah, kui toimub tehing | Kõrvaltabel |
 
 ## Stack
 
@@ -128,7 +128,7 @@ Testide tulemused: [kuhu salvestatakse / kuidas vaadata]
 
 | Nimi | Roll |
 |------|------|
-| Gerdo German  | Kvaliteedi omanik|
-| Rait Käpp | Andmeallika omanik |
+| Gerdo German  | Kvaliteedi omanik ja vajadusel Transformatsioonide omanik|
+| Rait Käpp | Andmeallika omanik ja vajadusel  Kvaliteedi omanik|
 | Aleksandra Kuld  | Transformatsioonide omanik |
 | Annela Velleste | Näidikulaua omanik |
