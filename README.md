@@ -22,11 +22,17 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 
 ```mermaid
 flowchart LR
-    source[Andmeallikas] --> ingest[Sissevõtt]
-    ingest --> staging[(staging)]
-    staging --> transform[Transformatsioon]
-    transform --> mart[(mart)]
-    mart --> dashboard[Näidikulaud]
+    source[API https://stooq.com/] --> ingest[Python laadimine]
+    source2[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
+    source3[API https://www.alphavantage.co] --> ingest
+    source4[aktsiaportfelli Excel] --> ingest
+    ingest --> staging[(PostgreSQL staging tabelid)]
+    staging --> transform[Python transofrmatsioonid]
+    transform --> mart[(PostgreSQL DWH tabelid)]
+    mart --> semantic_model[(PowerBI Semantiline mudel)]
+    semantic_model --> dashboard[PowerBI näidikulaud]
+    mart --> quality[Andmekvaliteedi testid]
+    scheduler[Cron Scheduler] --> ingest
 ```
 
 Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
@@ -35,26 +41,32 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---|---|---|---|
-| väärtpaberite info Python paketist | API | Jah, iga päev | Põhiandmevoog |
-| Investeerimisportfelli seis | Exceli tabel | Jah, kui toimub tehing | Kõrvaltabel |
+| https://stooq.com/ | API | jah, iga päev | Põhiandmevoog |
+| https://ranaroussi.github.io/yfinance/ | Python'i pakett | jah, iga päev | Põhiandmevoog |
+| https://www.alphavantage.co | API | jah, iga päev | Põhiandmevoog |
+| aktsiaportfelli Excel | Excel | muutub iga tehinguga  | masterdata | 
+
 
 ## Stack
 
 | Komponent | Tööriist |
 |-----------|---------|
-| Sissevõtt | Python, Excel|
-| Transformatsioon | SQL / dbt / ???|
+| Sissevõtt | Python|
+| Transformatsioon | SQL, Python |
 | Andmehoidla | PostgreSQL |
 | Näidikulaud | Power BI  |
-| Orkestreerimine | [Airflow / cron / muu] |
+| Orkestreerimine | cron |
 
 ## Käivitamine
 
 ```bash
 # 1. Klooni repo ja liigu kausta
-git clone <repo-url>
-cd <projekti-kaust>
+git clone https://github.com/rkapp22/PortfolioTracker.git
+cd PortfolioTracker
+```
 
+--Täiendamisel-----------
+```bash
 # 2. Kopeeri keskkonnamuutujad
 cp .env.example .env
 # Muuda .env failis paroolid ja muud seaded vastavalt vajadusele
@@ -82,11 +94,11 @@ Vajalikud muutujad:
 
 ## Andmevoog lühidalt
 
-1. **Sissevõtt** — [Kirjelda, kuidas andmed allikast kätte saadakse]
-2. **Laadimine** — Andmed laaditakse `staging` kihti
+1. **Sissevõtt** — Andmed laetakse allika API'sid või juba olemasolevaid Python paketti kasutades.
+2. **Laadimine** — Laadimine `staging` kihti toimub loodud Python paketi abil
 3. **Transformatsioon** — [Kirjelda peamised arvutused ja mudelid]
 4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust
-5. **Näidikulaud** — [Kirjelda lühidalt, mida näidikulaud näitab]
+5. **Näidikulaud** — [Kirjelda lühidalt, mida näidikulaud näitab] Näidikulauana kasutatakse powerBI Desktop faili. Käivitatav ja värskendatav kasutaja lokaalses arvutis.
 
 ## Andmekvaliteedi testid
 
