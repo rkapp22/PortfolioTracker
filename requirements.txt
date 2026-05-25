@@ -1,0 +1,15 @@
+# --- Core data stack ---
+pandas==2.2.3
+SQLAlchemy==2.0.36
+psycopg2-binary==2.9.10      # Postgres driver (binary = no compile needed)
+openpyxl==3.1.5              # read the investment Excel (.xlsx)
+
+# --- API access ---
+yfinance==0.2.50             # stock prices + dividends (keyless)
+requests==2.32.3             # FX rates from Frankfurter (keyless)
+
+# --- Scheduling (bonus) ---
+APScheduler==3.10.4          # optional in-Python scheduler alternative to cron
+
+# --- Utilities ---
+python-dotenv==1.0.1         # load .env when running scripts directly

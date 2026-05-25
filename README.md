@@ -63,6 +63,16 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 # 1. Klooni repo ja liigu kausta
 git clone https://github.com/rkapp22/PortfolioTracker.git
 cd PortfolioTracker
+
+# 2. Kopeeri keskkonnamuutujad
+cp .env.example .env
+
+# 3. Käivita teenused
+docker compose up -d --build
+
+# 4. Run the full pipeline once (ingest -> transform)
+docker compose exec app python src/run_pipeline.py
+#   (or: make pipeline)
 ```
 
 --Täiendamisel-----------

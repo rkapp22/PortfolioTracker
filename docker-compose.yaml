@@ -1,0 +1,76 @@
+# =============================================================================
+# Investment Portfolio Pipeline — orchestration
+# Two services:
+#   db   : PostgreSQL, port published to host for DBeaver / Power BI
+#   app  : Python pipeline + cron, code & Excel bind-mounted from host
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL data warehouse
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:16
+    container_name: portfolio_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # host:container — DBeaver and Power BI connect to localhost:${DB_HOST_PORT}
+      - "${DB_HOST_PORT}:5432"
+    volumes:
+      # Persist the database across `docker compose down` / restarts
+      - portfolio_pgdata:/var/lib/postgresql/data
+      # Auto-run schema on FIRST boot only (when the data volume is empty).
+      # Files in this dir run alphabetically — hence the 01_ prefix.
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # `app` waits for this to pass before it's allowed to start
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - portfolio-net
+
+  # ---------------------------------------------------------------------------
+  # Python pipeline + cron scheduler
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: portfolio-pipeline:latest
+    container_name: portfolio_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy     # wait until Postgres is actually ready
+    environment:
+      # DB connection (app talks to the db container by its service name "db")
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: db                # service name on the docker network
+      POSTGRES_PORT: 5432              # internal port (not the host-published one)
+      # Pipeline config
+      EXCEL_PATH: ${EXCEL_PATH}
+      BASE_CURRENCY: ${BASE_CURRENCY}
+      # Scheduler toggle: "manual" (default, idle) or "cron" (run on schedule)
+      RUN_MODE: ${RUN_MODE:-manual}
+    volumes:
+      - ./src:/app/src:rw              # live code — edit on host, runs in container
+      - ./data:/data:ro                # the Excel lives here, read-only
+      - ./logs:/app/logs:rw            # pipeline + cron logs surface on the host
+    networks:
+      - portfolio-net
+
+volumes:
+  portfolio_pgdata:                    # named volume = survives restarts
+
+networks:
+  portfolio-net:
+    driver: bridge

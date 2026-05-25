@@ -218,3 +218,26 @@ __marimo__/
 .streamlit/secrets.toml
 .DS_Store
 
+# --- Secrets / local config ---
+.env
+
+# --- Student personal data (keep the committed sample, ignore the rest) ---
+data/*.xlsx
+!data/sample_portfolio.xlsx
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
