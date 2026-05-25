@@ -1,0 +1,11 @@
+# =============================================================================
+# Bonus cron schedule (only active when RUN_MODE=cron).
+# Format: minute hour day month weekday  command
+# Env is sourced from /app/cron.env (written by the entrypoint) because cron
+# jobs otherwise run with an almost-empty environment.
+# =============================================================================
+
+# Run the full pipeline every weekday at 18:30 Europe/Tallinn (after market close)
+30 18 * * 1-5 root . /app/cron.env; cd /app && /usr/local/bin/python src/run_pipeline.py >> /app/logs/cron.log 2>&1
+
+# (empty trailing line required by cron)
