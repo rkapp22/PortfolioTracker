@@ -1,0 +1,36 @@
+relationship AutoDetected_e6fcb093-d32b-4126-a8b1-46f405c58d2e
+	fromColumn: fact_fx_rates.date_key
+	toColumn: dim_date.date_key
+
+relationship AutoDetected_b5d14ace-e696-405e-8e12-ad6aa47d8b76
+	fromColumn: fact_transactions.date_key
+	toColumn: dim_date.date_key
+
+relationship AutoDetected_42c9f4f2-1ba7-4fdc-b8d5-b5ae7f8bcf0b
+	fromColumn: fact_transactions.security_key
+	toColumn: dim_security.security_key
+
+relationship ec4681f5-822b-3ab5-8790-ab5b2f888ba9
+	fromColumn: fact_dividends.date_key
+	toColumn: dim_date.date_key
+
+relationship 3e9144f3-3aa1-b1d4-9d9f-7d87e1673965
+	fromColumn: fact_dividends.security_key
+	toColumn: dim_security.security_key
+
+relationship c6071ac1-2eae-2bb1-49fe-1898d2a199e6
+	fromColumn: fact_daily_prices.date_key
+	toColumn: dim_date.date_key
+
+relationship a5fb25c2-37da-bed0-0f83-091da6e26925
+	fromColumn: fact_holdings.date_key
+	toColumn: dim_date.date_key
+
+relationship 3fc448c4-4e9e-d643-dcfc-57bede09c744
+	fromColumn: fact_daily_prices.security_key
+	toColumn: dim_security.security_key
+
+relationship f49199f2-b1bc-1adc-3e63-4ac3f8669878
+	fromColumn: fact_holdings.security_key
+	toColumn: dim_security.security_key
+

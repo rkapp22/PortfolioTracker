@@ -1,0 +1,117 @@
+table fact_transactions
+	lineageTag: 6a58bf39-439e-4ab8-8874-8dcbcd964d9a
+
+	column transaction_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 021f1812-7030-4e2a-9677-79d75f2f3582
+		summarizeBy: none
+		sourceColumn: transaction_key
+
+		annotation SummarizationSetBy = User
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 60dd7842-7751-4489-9053-4c5cbb6755a7
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_key
+		dataType: int64
+		formatString: 0
+		lineageTag: affdf00e-cf48-4ecf-ab07-66157b736b6b
+		summarizeBy: none
+		sourceColumn: security_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column action
+		dataType: string
+		lineageTag: d6b3ef71-62be-4b30-8156-db9e33fb6d47
+		summarizeBy: none
+		sourceColumn: action
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: double
+		lineageTag: c193fd1c-d540-4b7f-b171-f4404531afa6
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column price_per_unit
+		dataType: double
+		lineageTag: b54e6bad-dddf-4c84-9865-1c5e3a988f6a
+		summarizeBy: none
+		sourceColumn: price_per_unit
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column currency
+		dataType: string
+		lineageTag: 789d0f53-c487-423c-bc7c-f80cb0058b74
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column gross_amount
+		dataType: double
+		lineageTag: 88b472bb-57d1-4a48-8039-1a43c67bbb62
+		summarizeBy: sum
+		sourceColumn: gross_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fx_rate_to_eur
+		dataType: double
+		lineageTag: 68dfc64f-8ae4-49fd-8ab1-dbafc6948bb2
+		summarizeBy: none
+		sourceColumn: fx_rate_to_eur
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gross_amount_eur
+		dataType: double
+		lineageTag: 0f05ff0f-94ae-452a-86ea-c46332a89348
+		summarizeBy: sum
+		sourceColumn: gross_amount_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column notes
+		dataType: string
+		lineageTag: 9f3c6503-c814-4f3e-be7c-e0a8cee53230
+		summarizeBy: none
+		sourceColumn: notes
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_transactions = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost:5432", "portfolio", [CreateNavigationProperties = false]),
+				  #"Navigation 1" = Source{[Schema = "dwh", Item = "fact_transactions"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

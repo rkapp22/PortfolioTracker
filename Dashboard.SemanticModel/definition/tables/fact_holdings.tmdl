@@ -1,0 +1,94 @@
+table fact_holdings
+	lineageTag: f914997b-00dc-48ab-91ed-d1e2c0507ad7
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 625cc440-fc24-47be-ba0b-a3984f08f1cd
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d97c151-6b5e-4dea-8d64-36526e97abb1
+		summarizeBy: none
+		sourceColumn: security_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity_held
+		dataType: double
+		lineageTag: 07d66380-cac1-4562-b3f0-3f47aacd1e7b
+		summarizeBy: sum
+		sourceColumn: quantity_held
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column close_price
+		dataType: double
+		lineageTag: c3dd422d-eba4-4329-b485-e625e9144385
+		summarizeBy: sum
+		sourceColumn: close_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column market_value
+		dataType: double
+		lineageTag: 67195afc-1689-46c1-a91c-18891b0ee9ad
+		summarizeBy: sum
+		sourceColumn: market_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column market_value_eur
+		dataType: double
+		lineageTag: 7fc75143-9304-473e-b7d9-7169f3bc775e
+		summarizeBy: sum
+		sourceColumn: market_value_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cost_basis_eur
+		dataType: double
+		lineageTag: c81e4026-f8d8-4c9c-ae30-686fe2eac421
+		summarizeBy: sum
+		sourceColumn: cost_basis_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column unrealized_pnl_eur
+		dataType: double
+		lineageTag: f777f926-c4d7-444d-bbca-2e42d19d061f
+		summarizeBy: sum
+		sourceColumn: unrealized_pnl_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_holdings = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost:5432", "portfolio", [CreateNavigationProperties = false]),
+				  #"Navigation 1" = Source{[Schema = "dwh", Item = "fact_holdings"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,81 @@
+table fact_dividends
+	lineageTag: 5ac1fbbb-9d8e-4c24-9bda-08e4e16199b9
+
+	column dividend_key
+		dataType: int64
+		formatString: 0
+		lineageTag: c0009e2b-1a2f-443c-851c-4ba27ec15873
+		summarizeBy: sum
+		sourceColumn: dividend_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: d848960d-e547-40a6-8195-9db135dd08e6
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column security_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 78b0e5b3-f3d9-490b-970e-193e825c42a0
+		summarizeBy: none
+		sourceColumn: security_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column dividend_per_share
+		dataType: double
+		lineageTag: 05637002-c607-4d9f-bb2e-0417c952e912
+		summarizeBy: sum
+		sourceColumn: dividend_per_share
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column currency
+		dataType: string
+		lineageTag: 4fdffe4f-e2d0-490e-bc40-4d56770f5a1d
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column fx_rate_to_eur
+		dataType: double
+		lineageTag: eddfb169-fbf1-452c-a223-0f8e4b2d17cc
+		summarizeBy: sum
+		sourceColumn: fx_rate_to_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column dividend_per_share_eur
+		dataType: double
+		lineageTag: aa34c7c2-ec7d-48c8-a433-f85748fe654f
+		summarizeBy: sum
+		sourceColumn: dividend_per_share_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_dividends = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost:5432", "portfolio", [CreateNavigationProperties = false]),
+				  #"Navigation 1" = Source{[Schema = "dwh", Item = "fact_dividends"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,51 @@
+table fact_fx_rates
+	lineageTag: 0aeb6931-b1e7-4668-bdee-b3ecdf48c12c
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: c5e5a3e0-f4c2-4970-bc08-b6b4074ff1f4
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column from_currency
+		dataType: string
+		lineageTag: d5393cc0-1c9a-46a7-976c-41b663c2a49e
+		summarizeBy: none
+		sourceColumn: from_currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column to_currency
+		dataType: string
+		lineageTag: a0d23973-45b8-4246-ae12-bec392428650
+		summarizeBy: none
+		sourceColumn: to_currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column rate_to_eur
+		dataType: double
+		lineageTag: aabde09f-0769-4553-861e-3bc2e739a1cc
+		summarizeBy: none
+		sourceColumn: rate_to_eur
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_fx_rates = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost:5432", "portfolio", [CreateNavigationProperties = false]),
+				  #"Navigation 1" = Source{[Schema = "dwh", Item = "fact_fx_rates"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
