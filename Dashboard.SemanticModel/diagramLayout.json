@@ -1,0 +1,113 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 269.46840706682428,
+            "y": 0
+          },
+          "nodeIndex": "dim_date",
+          "nodeLineageTag": "f2e4eddb-21e1-4751-b88d-c8fac030115c",
+          "size": {
+            "height": 397,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 844.55804017781782,
+            "y": 0
+          },
+          "nodeIndex": "dim_security",
+          "nodeLineageTag": "e4316141-55b2-4017-a73c-36bf0545e8ec",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 333.84375446353209,
+            "y": 651.99158568481278
+          },
+          "nodeIndex": "fact_daily_prices",
+          "nodeLineageTag": "86d1f1ed-e6aa-4691-81ff-53d52276f6ea",
+          "size": {
+            "height": 293.42857142857144,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 61.986611606389147,
+            "y": 650.84872854195544
+          },
+          "nodeIndex": "fact_dividends",
+          "nodeLineageTag": "5ac1fbbb-9d8e-4c24-9bda-08e4e16199b9",
+          "size": {
+            "height": 312.28571428571433,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 877.00000000000011,
+            "y": 635.12602851248255
+          },
+          "nodeIndex": "fact_fx_rates",
+          "nodeLineageTag": "0aeb6931-b1e7-4668-bdee-b3ecdf48c12c",
+          "size": {
+            "height": 238.85714285714289,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 605.98661160638926,
+            "y": 643.13444282766977
+          },
+          "nodeIndex": "fact_holdings",
+          "nodeLineageTag": "f914997b-00dc-48ab-91ed-d1e2c0507ad7",
+          "size": {
+            "height": 370.57142857142844,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1142.241629219986,
+            "y": 627.14285714285722
+          },
+          "nodeIndex": "fact_transactions",
+          "nodeLineageTag": "6a58bf39-439e-4ab8-8874-8dcbcd964d9a",
+          "size": {
+            "height": 389.28571428571445,
+            "width": 234
+          },
+          "zIndex": 2
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 70,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

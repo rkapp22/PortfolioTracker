@@ -75,6 +75,12 @@ docker compose exec app python src/run_pipeline.py
 #   (or: make pipeline)
 ```
 
+## Näidikulaud
+Näidikulaua avamiseks on vajalik kasutaja arvutis PowerBI Dekstop rakendust ( [Windows only](https://www.microsoft.com/en-us/power-platform/products/power-bi/downloads) )
+
+Näidikualud on failis Dashboard.pbip 
+
+
 --Täiendamisel-----------
 ```bash
 # 2. Kopeeri keskkonnamuutujad
