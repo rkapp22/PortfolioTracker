@@ -98,6 +98,32 @@
             "width": 234
           },
           "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1312.8264461850254,
+            "y": 0
+          },
+          "nodeIndex": "#Measures",
+          "nodeLineageTag": "7d81cf73-63a4-4559-ac19-2765fee945f7",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1401.9826917214934,
+            "y": 619.64285714285722
+          },
+          "nodeIndex": "fact_latest_holding",
+          "nodeLineageTag": "5ab201b9-bffa-491a-8598-ba003e6ee70f",
+          "size": {
+            "height": 242.85714285714289,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "All tables",

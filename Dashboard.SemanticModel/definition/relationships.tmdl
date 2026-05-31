@@ -34,3 +34,7 @@ relationship f49199f2-b1bc-1adc-3e63-4ac3f8669878
 	fromColumn: fact_holdings.security_key
 	toColumn: dim_security.security_key
 
+relationship 31bb3d10-00c9-4313-724e-c5de05e02e76
+	fromColumn: fact_latest_holding.security_key
+	toColumn: dim_security.security_key
+

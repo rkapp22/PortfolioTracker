@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "e3baae89aa29746e18ce",
   "position": {
-    "x": 359.74576271186442,
-    "y": 160.16949152542375,
+    "x": 344.69696969696969,
+    "y": 160.35353535353534,
     "z": 0,
-    "height": 399.15254237288138,
-    "width": 898.72881355932213,
+    "height": 250,
+    "width": 1155.3030303030303,
     "tabOrder": 0
   },
   "visual": {
@@ -54,6 +54,29 @@
               "nativeQueryRef": "Sum of market_value_eur"
             }
           ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fact_holdings"
+                        }
+                      },
+                      "Property": "quantity_held"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fact_holdings.quantity_held)",
+              "nativeQueryRef": "Sum of quantity_held"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -75,12 +98,40 @@
         "isDefaultSort": true
       }
     },
+    "objects": {
+      "y2Axis": [
+        {
+          "properties": {
+            "secStart": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "start": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [
       {
-        "name": "6145312440e4933bc138",
+        "name": "814837c35a17d385b441",
         "field": {
           "Column": {
             "Expression": {
@@ -94,7 +145,7 @@
         "type": "Categorical"
       },
       {
-        "name": "6660e4a8f50e520a7a40",
+        "name": "a5be073834b6171b1cc4",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -105,6 +156,25 @@
                   }
                 },
                 "Property": "market_value_eur"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "71a5f9b8cb1fb43ba7fd",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_holdings"
+                  }
+                },
+                "Property": "quantity_held"
               }
             },
             "Function": 0

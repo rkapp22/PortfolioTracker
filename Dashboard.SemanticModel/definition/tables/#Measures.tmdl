@@ -1,0 +1,37 @@
+table #Measures
+	lineageTag: 7d81cf73-63a4-4559-ac19-2765fee945f7
+
+	measure 'Latest Market Value EUR' =
+			
+			VAR LatestDateKey =
+			    CALCULATE (
+			        MAX ( fact_holdings[date_key] ),
+			        ALL ( fact_holdings )
+			    )
+			RETURN
+			    CALCULATE (
+			        SUM ( fact_holdings[market_value_eur] ),
+			        fact_holdings[date_key] = LatestDateKey
+			    )
+		lineageTag: 77c4135c-9b09-4493-a1b7-59e2a0d221e8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: fe7a4d88-f85e-42b8-8d30-ef4f0bc08df5
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition #Measures = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 4ab1d0afbb8644d6a5ea9ef537a7af47
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+
