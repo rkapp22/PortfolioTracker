@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["dim_date","dim_security","fact_daily_prices","fact_dividends","fact_fx_rates","fact_holdings","fact_transactions"]
+annotation PBI_QueryOrder = ["dim_date","dim_security","fact_daily_prices","fact_dividends","fact_fx_rates","fact_holdings","fact_transactions","fact_latest_holding"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -20,6 +20,8 @@ ref table fact_dividends
 ref table fact_fx_rates
 ref table fact_holdings
 ref table fact_transactions
+ref table #Measures
+ref table fact_latest_holding
 
 ref cultureInfo en-US
 

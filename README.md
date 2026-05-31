@@ -22,10 +22,10 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 
 ```mermaid
 flowchart LR
-    source1[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
-    source2[aktsiaportfelli Excel] --> ingest
+    source1[/Python pakett: yfinance/] --> ingest
+    source2[/aktsiaportfelli Excel/] --> ingest
     ingest --> staging[(PostgreSQL staging tabelid)]
-    staging --> transform[Python transofrmatsioonid]
+    staging --> transform[Python transformatsioonid]
     transform --> mart[(PostgreSQL DWH tabelid)]
     mart --> semantic_model[(PowerBI Semantiline mudel)]
     semantic_model --> dashboard[PowerBI näidikulaud]
@@ -39,9 +39,9 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---|---|---|---|
-| https://ranaroussi.github.io/yfinance/ | Python'i pakett | jah, iga päev | Põhiandmevoog |
-| https://api.frankfurter.dev/v1 | Python'i pakett | jah, iga päev | Põhiandmevoog |
-| aktsiaportfelli Excel | Excel | muutub iga tehinguga  | Alusandmed | 
+| https://ranaroussi.github.io/yfinance/ | Python'i pakett | jah, iga päev | Põhiandmevoog; väärtpaberi üldandmed ja hinna aegread|
+| https://api.frankfurter.dev/v1 | Python'i pakett | jah, iga päev | Põhiandmevoog; valuutakursid |
+| aktsiaportfelli Excel | Excel | muutub iga tehinguga  | Alusandmed; väärtpaberite ostud ja müügid | 
 
 
 ## Stack
@@ -53,6 +53,10 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 | Andmehoidla | PostgreSQL |
 | Näidikulaud | Power BI  |
 | Orkestreerimine | cron |
+
+Transformatsioonid on Python'is sest osa projektitöö osalistest on basic grupist.
+<br>
+Näidikulauana on kasutuses Microsoft'i Power BI, sest see oli projektitöö osalistele varasemalt tuttav lahendus. Lahendus on disainitud töötama kasutaja lokaalses arvutis (Alusandmed Excelist ja visualiseerimine Power BI Desktop rakendusega).
 
 ## Käivitamine
 
@@ -70,12 +74,17 @@ docker compose up -d --build
 # 4. Run the full pipeline once (ingest -> transform)
 docker compose exec app python src/run_pipeline.py
 #   (or: make pipeline)
+
+# 5. Ava rakendusega PowerBI Desktop (Windows only) fail 
+Dashboard.pbip
 ```
 
 ## Näidikulaud
 Näidikulaua avamiseks on vajalik kasutaja arvutis PowerBI Dekstop rakendust ( [Windows only](https://www.microsoft.com/en-us/power-platform/products/power-bi/downloads) )
 
 Näidikualud on failis Dashboard.pbip 
+
+Pärast avamist on vaja Home ribbon'ilt vali **Refresh** et laadida värske seis andmelaos.
 
 ## Saladused ja konfiguratsioon
 
@@ -93,7 +102,7 @@ Alljärgnevalt on loetletud keskkonnamuutujad, mida torujuht kasutab, koos näid
 | `BASE_CURRENCY` | Aruandluse / baasvaluuta (EUR) | EUR |
 | `RUN_MODE` | Orkestreerimise režiim: `manual` või `cron` | manual |
 
-Airflow (kui kasutatakse): http://localhost:8080 (kasutaja: airflow / parool: airflow)
+~~Airflow (kui kasutatakse): http://localhost:8080 (kasutaja: airflow / parool: airflow)~~
 
 Märkus: tundlikud väärtused (nt paroolid) jäta alati oma lokaalsesse `.env`-faili ega jaga neid avalikult. Kopeeri esmalt `.env.example` → `.env` ja kohanda väärtused vastavalt oma keskkonnale.
 
@@ -134,12 +143,20 @@ Testide tulemused: [kuhu salvestatakse / kuidas vaadata]
 
 **Kokkuvõte:**
 - [Loetle, mis on lõpule viidud, mis töötab hästi]
+- Docker'i konteinerid töötavad
+- andmete integreerimine toimib
+- andmete transformatsioon töötab
+- Andmebaasi staging ja dwh skeemad saavad täidetud
+- Näidikulaua mustand on olemas
 
 **Puudused:**
 - [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]
 
 **Mis edasi:**
 - [Mida tahaksid edasi teha, kui aega oleks rohkem]
+- cron'i asemel rakendada Airflow
+- Transformatsioonid realiseerida dbt'ga
+- Näidikulauana kasutada veebi-põhist rakendust nagu Superset või Metabase
 
 ## Meeskond
 

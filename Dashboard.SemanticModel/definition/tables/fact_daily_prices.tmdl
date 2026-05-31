@@ -3,10 +3,13 @@ table fact_daily_prices
 
 	column date_key
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 027998f2-34a0-4d49-a517-c66faa103b4c
 		summarizeBy: none
 		sourceColumn: date_key
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 

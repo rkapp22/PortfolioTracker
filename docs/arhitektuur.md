@@ -21,10 +21,10 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 
 ```mermaid
 flowchart LR
-    source1[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
-    source2[aktsiaportfelli Excel] --> ingest
+    source1[/Python pakett: yfinance/] --> ingest
+    source2[/aktsiaportfelli Excel/] --> ingest
     ingest --> staging[(PostgreSQL staging tabelid)]
-    staging --> transform[Python transofrmatsioonid]
+    staging --> transform[Python transformatsioonid]
     transform --> mart[(PostgreSQL DWH tabelid)]
     mart --> semantic_model[(PowerBI Semantiline mudel)]
     semantic_model --> dashboard[PowerBI näidikulaud]

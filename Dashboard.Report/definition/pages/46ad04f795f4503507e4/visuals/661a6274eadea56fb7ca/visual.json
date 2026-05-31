@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "661a6274eadea56fb7ca",
+  "position": {
+    "x": 332.07070707070704,
+    "y": 31.565656565656564,
+    "z": 4,
+    "height": 89.646464646464636,
+    "width": 258.83838383838383,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "#Measures"
+                    }
+                  },
+                  "Property": "Latest Market Value EUR"
+                }
+              },
+              "queryRef": "#Measures.Latest Market Value EUR",
+              "nativeQueryRef": "Latest Market Value EUR"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "9e5d72e792914421416a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "#Measures"
+              }
+            },
+            "Property": "Latest Market Value EUR"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}
