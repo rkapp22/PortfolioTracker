@@ -21,10 +21,8 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 
 ```mermaid
 flowchart LR
-    source[API https://stooq.com/] --> ingest[Python laadimine]
-    source2[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
-    source3[API https://www.alphavantage.co] --> ingest
-    source4[aktsiaportfelli Excel] --> ingest
+    source1[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
+    source2[aktsiaportfelli Excel] --> ingest
     ingest --> staging[(PostgreSQL staging tabelid)]
     staging --> transform[Python transofrmatsioonid]
     transform --> mart[(PostgreSQL DWH tabelid)]

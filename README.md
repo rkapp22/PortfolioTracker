@@ -22,10 +22,8 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 
 ```mermaid
 flowchart LR
-    source[API https://stooq.com/] --> ingest[Python laadimine]
-    source2[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
-    source3[API https://www.alphavantage.co] --> ingest
-    source4[aktsiaportfelli Excel] --> ingest
+    source1[Python pakett: https://ranaroussi.github.io/yfinance/] --> ingest
+    source2[aktsiaportfelli Excel] --> ingest
     ingest --> staging[(PostgreSQL staging tabelid)]
     staging --> transform[Python transofrmatsioonid]
     transform --> mart[(PostgreSQL DWH tabelid)]
@@ -41,10 +39,9 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 
 | Allikas | Tüüp | Ajas muutuv? | Roll |
 |---|---|---|---|
-| https://stooq.com/ | API | jah, iga päev | Põhiandmevoog |
 | https://ranaroussi.github.io/yfinance/ | Python'i pakett | jah, iga päev | Põhiandmevoog |
-| https://www.alphavantage.co | API | jah, iga päev | Põhiandmevoog |
-| aktsiaportfelli Excel | Excel | muutub iga tehinguga  | masterdata | 
+| https://api.frankfurter.dev/v1 | Python'i pakett | jah, iga päev | Põhiandmevoog |
+| aktsiaportfelli Excel | Excel | muutub iga tehinguga  | Alusandmed | 
 
 
 ## Stack
@@ -80,43 +77,35 @@ Näidikulaua avamiseks on vajalik kasutaja arvutis PowerBI Dekstop rakendust ( [
 
 Näidikualud on failis Dashboard.pbip 
 
-
---Täiendamisel-----------
-```bash
-# 2. Kopeeri keskkonnamuutujad
-cp .env.example .env
-# Muuda .env failis paroolid ja muud seaded vastavalt vajadusele
-
-# 3. Käivita teenused
-docker compose up -d --build
-
-# 4. [Vabatahtlik: käivita sissevõtt käsitsi esimesel korral]
-# docker compose exec pipeline python scripts/run_pipeline.py run-all
-```
-
-Airflow (kui kasutatakse): http://localhost:8080 (kasutaja: airflow / parool: airflow)
-Näidikulaud: http://localhost:[PORT]
-
 ## Saladused ja konfiguratsioon
 
-Kõik saladused (paroolid, API võtmed, andmebaasi URL-id) on `.env` failis. Repos on ainult `.env.example`, mis näitab vajalike muutujate struktuuri ilma tegelike väärtusteta. Päris `.env` faili ei tohi GitHubi panna - see on `.gitignore`-s.
+Kõik saladused (paroolid, API võtmed, andmebaasi URL-id) loetakse jooksvalt failist `.env`. Repos on ainult `.env.example`, mis näitab vajalike muutujate struktuuri ilma tegelike väärtusteta. Päris `.env` faili ei tohi GitHubi panna — see on `.gitignore`-s.
 
-Vajalikud muutujad:
+Alljärgnevalt on loetletud keskkonnamuutujad, mida torujuht kasutab, koos näidiste väärtustega (võetud projektis leiduvast `.env`-failist):
 
 | Muutuja | Tähendus | Näide |
 |---------|----------|-------|
-| `DB_PASSWORD` | PostgreSQL parool | (saladus) |
-| `[teised]` | ... | ... |
+| `POSTGRES_USER` | PostgreSQL kasutajanimi | portfolio |
+| `POSTGRES_PASSWORD` | PostgreSQL parool | portfolio |
+| `POSTGRES_DB` | PostgreSQL andmebaasi nimi | portfolio |
+| `DB_HOST_PORT` | Hostis avalikustatud PostgreSQL port | 5432 |
+| `EXCEL_PATH` | Tee konteineri sees Exceli portfellifaili | /data/sample_portfolio.xlsx |
+| `BASE_CURRENCY` | Aruandluse / baasvaluuta (EUR) | EUR |
+| `RUN_MODE` | Orkestreerimise režiim: `manual` või `cron` | manual |
+
+Airflow (kui kasutatakse): http://localhost:8080 (kasutaja: airflow / parool: airflow)
+
+Märkus: tundlikud väärtused (nt paroolid) jäta alati oma lokaalsesse `.env`-faili ega jaga neid avalikult. Kopeeri esmalt `.env.example` → `.env` ja kohanda väärtused vastavalt oma keskkonnale.
 
 ## Andmevoog lühidalt
 
-1. **Sissevõtt** — Andmed laetakse allika API'sid või juba olemasolevaid Python paketti kasutades.
-2. **Laadimine** — Laadimine `staging` kihti toimub loodud Python paketi abil
-3. **Transformatsioon** — [Kirjelda peamised arvutused ja mudelid]
-4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust
-5. **Näidikulaud** — [Kirjelda lühidalt, mida näidikulaud näitab] Näidikulauana kasutatakse powerBI Desktop faili. Käivitatav ja värskendatav kasutaja lokaalses arvutis.
+1. **Sissevõtt** — Andmeid saadakse käsitsi täidetava Exceli ja vabavaraliste Pythoni pakettide kaudu.
+2. **Laadimine** — Laadimine `staging` kihti toimub loodud `pandas` paketi abil.
+3. **Transformatsioon** — tranformeeritakse `staging` kihist `dwh` kihti. Moodustatakse aktsiate omamise, omandamise ja valuutakursi tabelid.
+4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust ##TODO.
+5. **Näidikulaud** — Kuvatakse aktsiaportfelli tootlust vastaval perioodil erinevate enimlevinud näidikute abil. Näidikulauana kasutatakse PowerBI Desktop faili. Käivitatav ja värskendatav kasutaja lokaalses arvutis.
 
-## Andmekvaliteedi testid
+## Andmekvaliteedi testid -- TODO
 
 Projekt kontrollib järgmist:
 

@@ -28,9 +28,7 @@ RENAME_MAP = {
     "Low": "low_price",
     "Close": "close_price",
     "Volume": "volume",
-    "Adj Close": "adj_close",
     "Dividends": "dividends",
-    "Stock Splits": "stock_splits",
 }
 PRICE_REQUIRED = ("price_date", "ticker")
 
