@@ -17,6 +17,94 @@ table #Measures
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure 'Portfolio Value EUR' =
+			
+			SUM ( fact_latest_holding[market_value_eur] )
+		lineageTag: f555de11-f014-4b7b-95dd-103486e8c354
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Beginning Portfolio Value EUR' =
+			
+			VAR StartDate =
+			    MIN ( dim_date[date_key] )
+			
+			VAR FirstAvailableDate =
+			    CALCULATE (
+			        MIN ( fact_holdings[date_key] ),
+			        fact_holdings[date_key] >= StartDate
+			    )
+			
+			RETURN
+			CALCULATE (
+			    SUM ( fact_holdings[market_value_eur] ),
+			    fact_holdings[date_key] = FirstAvailableDate
+			)
+		lineageTag: a3af9cb3-eb3f-4a40-81f8-94b7192ecd2b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ending Portfolio Value EUR' =
+			
+			VAR EndDate =
+			    MAX ( dim_date[date_key] )
+			
+			VAR LastAvailableDate =
+			    CALCULATE (
+			        MAX ( fact_holdings[date_key] ),
+			        fact_holdings[date_key] <= EndDate
+			    )
+			
+			RETURN
+			CALCULATE (
+			    SUM ( fact_holdings[market_value_eur] ),
+			    fact_holdings[date_key] = LastAvailableDate
+			)
+		lineageTag: bcb18ca4-619f-4536-9f0f-8abf5b495aca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Cash Flow EUR' =
+			
+			SUMX (
+			    fact_transactions,
+			    SWITCH (
+			        TRUE(),
+			        fact_transactions[action] = "BUY",
+			            fact_transactions[quantity]
+			                * fact_transactions[price_per_unit]
+			                * fact_transactions[fx_rate_to_eur],
+			
+			        fact_transactions[action] = "SELL",
+			            - fact_transactions[quantity]
+			                * fact_transactions[price_per_unit]
+			                * fact_transactions[fx_rate_to_eur],
+			
+			        0
+			    )
+			)
+		lineageTag: 3a5e3bd4-3d05-403f-8ccf-8428eb387f72
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Koguportfelli tootlus EUR' =
+			
+			[Ending Portfolio Value EUR]
+			    - [Beginning Portfolio Value EUR]
+			    - [Net Cash Flow EUR]
+		lineageTag: c0abb9cf-e805-4dca-921d-ae64eb6e37a7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Koguportfelli tootlus %' =
+			
+			DIVIDE (
+			    [Koguportfelli tootlus EUR],
+			    [Beginning Portfolio Value EUR]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5b590133-25f0-446f-95d6-1c6ac003726f
+
 	column Column
 		isHidden
 		formatString: 0
