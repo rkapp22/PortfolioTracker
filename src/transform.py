@@ -50,6 +50,7 @@ def build_dim_date() -> None:
     df["day_of_week"] = df["full_date"].dt.dayofweek + 1   # 1=Mon
     df["day_name"] = df["full_date"].dt.strftime("%A")
     df["week_of_year"] = df["full_date"].dt.isocalendar().week.astype(int)
+    df["week_of_year_w"] = df["week_of_year"].apply(lambda w: f"W{w:02d}")
     df["is_weekend"] = df["day_of_week"] >= 6
     df["is_trading_day"] = ~df["is_weekend"]
     df["full_date"] = df["full_date"].dt.date

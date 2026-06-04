@@ -90,6 +90,7 @@ CREATE TABLE dwh.dim_date (
     day_of_week     SMALLINT    NOT NULL,             -- 1=Mon..7=Sun
     day_name        VARCHAR(9)  NOT NULL,
     week_of_year    SMALLINT    NOT NULL,
+    week_of_year_w  VARCHAR(3)  NOT NULL,             -- e.g. 'W01'..'W53'
     is_weekend      BOOLEAN     NOT NULL,
     is_trading_day  BOOLEAN     NOT NULL DEFAULT TRUE
 );

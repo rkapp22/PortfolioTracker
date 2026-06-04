@@ -19,7 +19,7 @@ table #Measures
 
 	measure 'Portfolio Value EUR' =
 			
-			SUM ( fact_holdings[market_value_eur] )
+			SUM ( fact_latest_holding[market_value_eur] )
 		lineageTag: f555de11-f014-4b7b-95dd-103486e8c354
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
