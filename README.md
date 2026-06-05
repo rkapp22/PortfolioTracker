@@ -43,6 +43,9 @@ Täpsem kirjeldus: [`docs/arhitektuur.md`](docs/arhitektuur.md)
 | https://api.frankfurter.dev/v1 | Python'i pakett | jah, iga päev | Põhiandmevoog; valuutakursid |
 | aktsiaportfelli Excel | Excel | muutub iga tehinguga  | Alusandmed; väärtpaberite ostud ja müügid | 
 
+Projektiga on investeeringute näidisandmed failid `data/sample_portfolio.xlsx`. 
+Kasutajal on võimalik asendada see fail endale huvi pakkuvate väärtpaberite ja tehingute infoga
+
 
 ## Stack
 
@@ -58,7 +61,7 @@ Transformatsioonid on Python'is sest osa projektitöö osalistest on basic grupi
 <br>
 Näidikulauana on kasutuses Microsoft'i Power BI, sest see oli projektitöö osalistele varasemalt tuttav lahendus. Lahendus on disainitud töötama kasutaja lokaalses arvutis (Alusandmed Excelist ja visualiseerimine Power BI Desktop rakendusega).
 
-## Käivitamine
+## Esmane käivitamine
 
 ```bash
 # 1. Klooni repo ja liigu kausta
@@ -71,12 +74,32 @@ cp .env.example .env
 # 3. Käivita teenused
 docker compose up -d --build
 
-# 4. Run the full pipeline once (ingest -> transform)
+# 4. Käivita kogu andmelaadimise pipeline käsitsi (ingest -> transform)
 docker compose exec app python src/run_pipeline.py
 #   (or: make pipeline)
 
-# 5. Ava rakendusega PowerBI Desktop (Windows only) fail 
+# 5. Ava rakendusega PowerBI Desktop (Windows only) fail ja värskenda andmed
 Dashboard.pbip
+
+# 6. Töö lõpetamine
+    - Sulge PowerBI
+docker compose stop
+```
+
+## Käivitamine järgmistel kordadel
+```bash
+# 1. Käivita Docker'i konteinerid
+docker compose start
+
+# 2. Värskenda andmed (loeb sisse uue seisu investeerimis-Escelist ja väärtpaberite info internetist)
+docker compose exec app python src/run_pipeline.py
+
+# 3. Ava rakendusega PowerBI Desktop (Windows only) fail ja värskenda andmed
+Dashboard.pbip
+
+# 4. Töö lõpetamine
+    - Sulge PowerBI
+docker compose stop
 ```
 
 ## Näidikulaud
@@ -114,47 +137,83 @@ Märkus: tundlikud väärtused (nt paroolid) jäta alati oma lokaalsesse `.env`-
 4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust ##TODO.
 5. **Näidikulaud** — Kuvatakse aktsiaportfelli tootlust vastaval perioodil erinevate enimlevinud näidikute abil. Näidikulauana kasutatakse PowerBI Desktop faili. Käivitatav ja värskendatav kasutaja lokaalses arvutis.
 
-## Andmekvaliteedi testid -- TODO
+## Andmekvaliteedi testid
+Andmekvaliteedi testid on kirjeldatud failis `src/data_quality_tests.py`
 
-Projekt kontrollib järgmist:
+Iga andmetoru käivituskord kirjutab testi tulemused tabelisse `staging.dq_results` ning säilitab vigased read (originaalandmetega, JSON-formaadis) tabelis `staging.rejected_rows`. Kokkuvõte kuvatakse terminalis iga käivituskorra lõpus.
 
-1. [Test 1 - nt: kasutajate ID on unikaalne]
-2. [Test 2 - nt: tellimuse summa pole null]
-3. [Test 3 - nt: kuupäev jääb vahemikku 2020-2026]
-[Lisa rohkem, kui sul on]
+Tõsidusastmed:
+- **BLOCK** — andmetoru katkeb (nt Exceli veergude struktuur ei vasta oodatule)
+- **REJECT** — rida pannakse karantiini; ülejäänud andmed laetakse
+- **WARN** — kõik andmed laetakse; kasutajat teavitatakse probleemist
+- **INFO** — informatiivne, ühtegi takistavat toimingut ei tehta
 
-Testide tulemused: [kuhu salvestatakse / kuidas vaadata]
+Tulemuste vaatamine SQL-is:
+```sql
+-- Viimase käivituse tulemused
+SELECT * FROM staging.dq_results
+WHERE run_id = (SELECT MAX(run_id) FROM staging.dq_results)
+ORDER BY severity, check_name;
+
+-- Karantiini pandud read viimasest käivitusest
+SELECT * FROM staging.rejected_rows
+WHERE run_id = (SELECT MAX(run_id) FROM staging.rejected_rows);
+```
 
 ## Projekti struktuur
 
 ```
 .
 ├── README.md
-├── compose.yml
-├── .env.example
+├── .env.example                ← keskkonnamuutujate mall (kopeeri -> .env)
 ├── .gitignore
+├── Dockerfile                  ← rakenduse konteineri ehitusjuhend
+├── docker-compose.yaml         ← teenuste orkestratsioon (app + db)
+├── docker-entrypoint.sh        ← konteineri käivitusskript
+├── Makefile                    ← mugavuskäsud (make pipeline, make reset jne)
+├── crontab                     ← ajakava automaatseks käivitamiseks
+├── requirements.txt            ← Pythoni sõltuvused
+│
+├── data/
+│   └── sample_portfolio.xlsx  ← näidisportfell (asenda oma andmetega)
+│
 ├── docs/
-│   ├── arhitektuur.md      ← nädal 1 väljund
-│   └── progress.md         ← nädal 2 väljund
-└── ...                     ← ülejäänud projektifailid
+│   ├── arhitektuur.md         ← arhitektuurikirjeldus
+│   └── progress.md            ← edenemise logi
+│
+├── sql/
+│   └── 01_schema.sql          ← andmebaasi skeemi loomine (staging + dwh)
+│
+├── src/
+│   ├── config.py              ← keskkonnamuutujate lugemine
+│   ├── db.py                  ← andmebaasi ühenduse haldus
+│   ├── ingest.py              ← andmete laadimine (Excel + API -> staging)
+│   ├── transform.py           ← teisendused (staging -> dwh tärnskeema)
+│   ├── data_quality_tests.py  ← andmekvaliteedi testid
+│   └── run_pipeline.py        ← täispipeline'i käivitaja
+│
+└── Dashboard.pbip             ← Power BI projekt
+    ├── Dashboard.Report/      ← Power BI visuaalid ja leheküljed
+    └── Dashboard.SemanticModel/ ← Power BI andmemudel (tabelid, seosed, mõõdikud)
 ```
 
 ## Kokkuvõte, puudused ja võimalikud edasiarendused
 
 **Kokkuvõte:**
-- [Loetle, mis on lõpule viidud, mis töötab hästi]
 - Docker'i konteinerid töötavad
 - andmete integreerimine toimib
+- andme-kvaliteedi testid on olemas
 - andmete transformatsioon töötab
 - Andmebaasi staging ja dwh skeemad saavad täidetud
-- Näidikulaua mustand on olemas
+- Näidikulaud on olemas
+
 
 **Puudused:**
-- [Loetle ausalt, mis jäi tegemata - see ei mõjuta hinnet negatiivselt, vaid aitab hinnata]
+- Näidikulaua mõõdikute valideerimine (kas arvutavad õigesti) on vaja veel teha
 
 **Mis edasi:**
-- [Mida tahaksid edasi teha, kui aega oleks rohkem]
 - cron'i asemel rakendada Airflow
+  - kuigi hetkel tundub täiesti piisav käivitada andmetoru käsitsi
 - Transformatsioonid realiseerida dbt'ga
 - Näidikulauana kasutada veebi-põhist rakendust nagu Superset või Metabase
 

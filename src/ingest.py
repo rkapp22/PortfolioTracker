@@ -16,6 +16,12 @@ import yfinance as yf
 
 from config import EXCEL_PATH, BASE_CURRENCY
 from db import get_engine, truncate
+from data_quality_tests import (
+    check_excel_schema, check_excel_transaction_rows,
+    check_api_prices_sanity,
+    write_dq_results, write_rejected_rows,
+    BlockingDqError,
+)
 
 engine = get_engine()
 FRANKFURTER = "https://api.frankfurter.dev/v1"
@@ -69,30 +75,46 @@ def _filter_to_existing(df: pd.DataFrame, table: str,
 # --------------------------------------------------------------------------- #
 # 1. Excel -> staging.transactions, staging.securities
 # --------------------------------------------------------------------------- #
-def ingest_excel() -> tuple[list[str], pd.Timestamp]:
+def ingest_excel(run_id: dt.datetime, dq_results: list) -> tuple[list[str], pd.Timestamp]:
     log(f"Reading Excel: {EXCEL_PATH}")
     sheets = pd.read_excel(EXCEL_PATH, sheet_name=None)
 
-    securities = sheets["securities"].copy()
-    securities.columns = [c.strip().lower() for c in securities.columns]
-    truncate("staging", "securities")
-    securities.to_sql("securities", engine, schema="staging",
-                      if_exists="append", index=False)
-    log(f"  loaded {len(securities)} securities")
+    df_sec = sheets["securities"].copy()
+    df_sec.columns = [c.strip().lower() for c in df_sec.columns]
 
-    tx = sheets["transactions"].copy()
-    tx.columns = [c.strip().lower() for c in tx.columns]
-    tx = tx.rename(columns={"date": "transaction_date"})
+    df_tx = sheets["transactions"].copy()
+    df_tx.columns = [c.strip().lower() for c in df_tx.columns]
+
+    # DQ: schema check — BLOCK on failure (runs before any staging write)
+    schema_results = check_excel_schema(df_tx, df_sec)
+    dq_results.extend(schema_results)
+    if any(r.severity == "BLOCK" for r in schema_results):
+        write_dq_results(engine, run_id, dq_results)
+        raise BlockingDqError("Excel schema check failed — see staging.dq_results")
+
+    # DQ: row-level checks — REJECT bad rows, keep the rest
+    good_tx, bad_tx, row_results = check_excel_transaction_rows(df_tx)
+    dq_results.extend(row_results)
+    write_rejected_rows(engine, run_id, "excel.transactions", bad_tx)
+
+    # Load securities
+    truncate("staging", "securities")
+    df_sec.to_sql("securities", engine, schema="staging",
+                  if_exists="append", index=False)
+    log(f"  loaded {len(df_sec)} securities")
+
+    # Load good transactions (rename date -> transaction_date, keep known columns)
+    good_tx = good_tx.rename(columns={"date": "transaction_date"})
     keep = ["transaction_date", "ticker", "action", "quantity",
             "price_per_unit", "currency", "gross_amount", "notes"]
-    tx = tx[[c for c in keep if c in tx.columns]]
+    good_tx = good_tx[[c for c in keep if c in good_tx.columns]]
     truncate("staging", "transactions")
-    tx.to_sql("transactions", engine, schema="staging",
-              if_exists="append", index=False)
-    log(f"  loaded {len(tx)} transactions")
+    good_tx.to_sql("transactions", engine, schema="staging",
+                   if_exists="append", index=False)
+    log(f"  loaded {len(good_tx)} transactions")
 
-    tickers = securities["ticker"].dropna().unique().tolist()
-    earliest = pd.to_datetime(tx["transaction_date"]).min()
+    tickers = df_sec["ticker"].dropna().unique().tolist()
+    earliest = pd.to_datetime(good_tx["transaction_date"]).min()
     return tickers, earliest
 
 
@@ -156,6 +178,7 @@ def ingest_prices_and_dividends(
     tickers: list[str],
     start: pd.Timestamp,
     securities_ccy: dict[str, str],
+    dq_results: list,
 ) -> None:
     """Fetch OHLCV + actions in ONE yfinance call, then split into two tables."""
     log(f"Fetching daily prices + dividends for {len(tickers)} tickers from {start.date()}")
@@ -195,9 +218,11 @@ def ingest_prices_and_dividends(
                 log(f"  {tk}: {len(divs)} dividend events")
 
     # ----- write prices ----------------------------------------------------- #
-    if price_frames:
-        df = pd.concat(price_frames, ignore_index=True)
-        df = _filter_to_existing(df, "daily_prices", PRICE_REQUIRED)
+    all_prices = pd.concat(price_frames, ignore_index=True) if price_frames else pd.DataFrame()
+    dq_results.extend(check_api_prices_sanity(all_prices))
+
+    if not all_prices.empty:
+        df = _filter_to_existing(all_prices, "daily_prices", PRICE_REQUIRED)
         if df is not None:
             df.to_sql(
                 "daily_prices", engine, schema="staging",
@@ -251,17 +276,23 @@ def ingest_fx(currencies: set[str], start: pd.Timestamp) -> None:
         log(f"  loaded {len(rows)} FX rows")
 
 
-def main() -> int:
-    tickers, earliest = ingest_excel()
+def main(run_id: dt.datetime = None) -> tuple[int, list]:
+    if run_id is None:
+        run_id = dt.datetime.now()
+    dq_results = []
+
+    tickers, earliest = ingest_excel(run_id, dq_results)
     sec = pd.read_sql("SELECT ticker, currency FROM staging.securities", engine)
     ccy_map = dict(zip(sec["ticker"], sec["currency"]))
     currencies = set(sec["currency"].dropna())
 
-    ingest_prices_and_dividends(tickers, earliest, ccy_map)
+    ingest_prices_and_dividends(tickers, earliest, ccy_map, dq_results)
     ingest_fx(currencies, earliest)
+
+    write_dq_results(engine, run_id, dq_results)
     log("Ingest complete.")
-    return 0
+    return 0, dq_results
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main()[0])

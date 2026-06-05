@@ -73,6 +73,25 @@ CREATE TABLE staging.dividends (
 );
 
 
+-- DQ result log: one row per check executed per pipeline run ----------------
+CREATE TABLE staging.dq_results (
+    run_id        TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    check_name    VARCHAR(80)  NOT NULL,
+    severity      VARCHAR(10)  NOT NULL CHECK (severity IN ('BLOCK','REJECT','WARN','INFO')),
+    object_ref    VARCHAR(200),
+    message       TEXT         NOT NULL,
+    row_count     INTEGER
+);
+
+-- Rejected rows quarantine: original row preserved as JSONB -----------------
+CREATE TABLE staging.rejected_rows (
+    run_id        TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    source        VARCHAR(40)  NOT NULL,
+    reason        TEXT         NOT NULL,
+    row_data      JSONB        NOT NULL
+);
+
+
 -- #############################################################################
 -- DWH LAYER  — modeled star schema. This is what Power BI connects to.
 -- #############################################################################
@@ -90,6 +109,7 @@ CREATE TABLE dwh.dim_date (
     day_of_week     SMALLINT    NOT NULL,             -- 1=Mon..7=Sun
     day_name        VARCHAR(9)  NOT NULL,
     week_of_year    SMALLINT    NOT NULL,
+    week_of_year_w  VARCHAR(3)  NOT NULL,             -- e.g. 'W01'..'W53'
     is_weekend      BOOLEAN     NOT NULL,
     is_trading_day  BOOLEAN     NOT NULL DEFAULT TRUE
 );

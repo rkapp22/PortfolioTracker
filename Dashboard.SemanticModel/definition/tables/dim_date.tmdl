@@ -109,6 +109,14 @@ table dim_date
 
 		annotation SummarizationSetBy = Automatic
 
+	column week_of_year_w
+		dataType: string
+		lineageTag: 4aa9facb-6ed3-4745-b61c-b14d67201c3e
+		summarizeBy: none
+		sourceColumn: week_of_year_w
+
+		annotation SummarizationSetBy = Automatic
+
 	partition dim_date = m
 		mode: import
 		source =
