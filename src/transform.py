@@ -13,6 +13,7 @@ from sqlalchemy import text
 
 from config import BASE_CURRENCY
 from db import get_engine, truncate
+from data_quality_tests import check_oversell, write_dq_results
 
 engine = get_engine()
 
@@ -247,7 +248,10 @@ def build_fact_holdings(tx: pd.DataFrame, skmap, fxf) -> None:
     log(f"fact_holdings: {len(out)} daily snapshot rows")
 
 
-def main() -> int:
+def main(run_id: dt.datetime = None) -> tuple[int, list]:
+    if run_id is None:
+        run_id = dt.datetime.now()
+
     build_dim_date()
     build_dim_security()
     skmap = security_key_map()
@@ -258,9 +262,13 @@ def main() -> int:
     tx = build_fact_transactions(skmap, fxf)
     build_fact_dividends(skmap, fxf)
     build_fact_holdings(tx, skmap, fxf)
+
+    dq_results = check_oversell(engine)
+    write_dq_results(engine, run_id, dq_results)
+
     log("Transform complete.")
-    return 0
+    return 0, dq_results
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main()[0])
