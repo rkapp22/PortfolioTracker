@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "94c41f8cb7b12096d662",
   "position": {
-    "x": 1208.1536189069425,
-    "y": 575.7163958641064,
+    "x": 1524.0764331210187,
+    "y": 38.216560509554093,
     "z": 1000,
-    "height": 367.26735598227475,
-    "width": 700.50221565731169,
+    "height": 382.16560509554142,
+    "width": 386.75159235668787,
     "tabOrder": 1000
   },
   "visual": {
@@ -61,20 +61,6 @@
               },
               "queryRef": "#Measures.Ending Portfolio Value EUR",
               "nativeQueryRef": "Ending Portfolio Value EUR"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "#Measures"
-                    }
-                  },
-                  "Property": "Latest Market Value EUR"
-                }
-              },
-              "queryRef": "#Measures.Latest Market Value EUR",
-              "nativeQueryRef": "Latest Market Value EUR"
             },
             {
               "field": {
@@ -151,6 +137,50 @@
               }
             }
           }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "84.34293205233105D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "dim_date"
+                          }
+                        },
+                        "Property": "year"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "2026L"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
         }
       ]
     },

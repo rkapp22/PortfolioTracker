@@ -51,13 +51,12 @@ table fact_holdings
 
 	column market_value_eur
 		dataType: double
+		formatString: #,0\ "€";-#,0\ "€";#,0\ "€"
 		lineageTag: 7fc75143-9304-473e-b7d9-7169f3bc775e
 		summarizeBy: sum
 		sourceColumn: market_value_eur
 
 		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column cost_basis_eur
 		dataType: double

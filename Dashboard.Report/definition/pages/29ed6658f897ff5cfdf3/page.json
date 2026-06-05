@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "29ed6658f897ff5cfdf3",
-  "displayName": "V2 Overview",
+  "displayName": "Overview",
   "displayOption": "FitToWidth",
-  "height": 1400,
+  "height": 2400,
   "width": 1920,
   "objects": {
     "background": [
@@ -46,6 +46,31 @@
     {
       "source": "dca90492b3a84dc3d29c",
       "target": "968420a598f11808dccf",
+      "type": "DataFilter"
+    },
+    {
+      "source": "dca90492b3a84dc3d29c",
+      "target": "d83aaebff71046e96fb3",
+      "type": "DataFilter"
+    },
+    {
+      "source": "dca90492b3a84dc3d29c",
+      "target": "ec8d27cdd93c6da9a41d",
+      "type": "DataFilter"
+    },
+    {
+      "source": "36fc9fc673797d3e7000",
+      "target": "d83aaebff71046e96fb3",
+      "type": "DataFilter"
+    },
+    {
+      "source": "36fc9fc673797d3e7000",
+      "target": "ec8d27cdd93c6da9a41d",
+      "type": "DataFilter"
+    },
+    {
+      "source": "36fc9fc673797d3e7000",
+      "target": "dca90492b3a84dc3d29c",
       "type": "DataFilter"
     }
   ]
