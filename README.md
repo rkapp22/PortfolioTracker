@@ -13,9 +13,7 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 5. Realiseerimata kasum/kahjum - Avatud positsioonide hetkeseis
 6. Tehingute arv perioodis
 7. Keskmine hoidmisperiood 
-8. P/E Ratio - Price / Earnings
-9. Dividend Yield - Dividenditootlus
-10. Market Cap - Ettevõtte suurus
+8. Market Cap - Ettevõtte suurus
 
 
 ## Arhitektuur
@@ -125,8 +123,6 @@ Alljärgnevalt on loetletud keskkonnamuutujad, mida torujuht kasutab, koos näid
 | `BASE_CURRENCY` | Aruandluse / baasvaluuta (EUR) | EUR |
 | `RUN_MODE` | Orkestreerimise režiim: `manual` või `cron` | manual |
 
-~~Airflow (kui kasutatakse): http://localhost:8080 (kasutaja: airflow / parool: airflow)~~
-
 Märkus: tundlikud väärtused (nt paroolid) jäta alati oma lokaalsesse `.env`-faili ega jaga neid avalikult. Kopeeri esmalt `.env.example` → `.env` ja kohanda väärtused vastavalt oma keskkonnale.
 
 ## Andmevoog lühidalt
@@ -134,7 +130,7 @@ Märkus: tundlikud väärtused (nt paroolid) jäta alati oma lokaalsesse `.env`-
 1. **Sissevõtt** — Andmeid saadakse käsitsi täidetava Exceli ja vabavaraliste Pythoni pakettide kaudu.
 2. **Laadimine** — Laadimine `staging` kihti toimub loodud `pandas` paketi abil.
 3. **Transformatsioon** — tranformeeritakse `staging` kihist `dwh` kihti. Moodustatakse aktsiate omamise, omandamise ja valuutakursi tabelid.
-4. **Testimine** — [Mitu] andmekvaliteedi testi kontrollivad korrektsust ##TODO.
+4. **Testimine** — Andmekvaliteedi testi kontrollivad korrektsust andmetes kui ka APIdes.
 5. **Näidikulaud** — Kuvatakse aktsiaportfelli tootlust vastaval perioodil erinevate enimlevinud näidikute abil. Näidikulauana kasutatakse PowerBI Desktop faili. Käivitatav ja värskendatav kasutaja lokaalses arvutis.
 
 ## Andmekvaliteedi testid
@@ -206,7 +202,6 @@ WHERE run_id = (SELECT MAX(run_id) FROM staging.rejected_rows);
 - andmete transformatsioon töötab
 - Andmebaasi staging ja dwh skeemad saavad täidetud
 - Näidikulaud on olemas
-
 
 **Puudused:**
 - Näidikulaua mõõdikute valideerimine (kas arvutavad õigesti) on vaja veel teha
