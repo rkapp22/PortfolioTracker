@@ -3,7 +3,7 @@
   "name": "968420a598f11808dccf",
   "position": {
     "x": 340.32496307237813,
-    "y": 289.27621861152141,
+    "y": 685.19978549050222,
     "z": 0,
     "height": 268.00590841949781,
     "width": 1568.330871491876,
@@ -229,7 +229,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "11D"
                 }
               }
             },
@@ -243,7 +243,7 @@
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'wf_standard-font, helvetica, arial, sans-serif'"
+                  "Value": "'''Segoe UI Bold'', wf_segoe-ui_bold, helvetica, arial, sans-serif'"
                 }
               }
             }

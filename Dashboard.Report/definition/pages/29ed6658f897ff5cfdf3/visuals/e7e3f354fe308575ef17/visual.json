@@ -3,7 +3,7 @@
   "name": "e7e3f354fe308575ef17",
   "position": {
     "x": 340.32496307237813,
-    "y": 38.28655834564254,
+    "y": 434.21012522462337,
     "z": 2000,
     "height": 229.71935007385525,
     "width": 1568.330871491876,
@@ -59,6 +59,24 @@
               "queryRef": "dim_date.full_date",
               "nativeQueryRef": "full_date",
               "active": false
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "#Measures"
+                    }
+                  },
+                  "Property": "Koguportfelli tootlus EUR"
+                }
+              },
+              "queryRef": "#Measures.Koguportfelli tootlus EUR",
+              "nativeQueryRef": "Koguportfelli tootlus EUR"
             }
           ]
         },
@@ -242,7 +260,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "11D"
                 }
               }
             },
@@ -256,7 +274,7 @@
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'wf_standard-font, helvetica, arial, sans-serif'"
+                  "Value": "'''Segoe UI Bold'', wf_segoe-ui_bold, helvetica, arial, sans-serif'"
                 }
               }
             }

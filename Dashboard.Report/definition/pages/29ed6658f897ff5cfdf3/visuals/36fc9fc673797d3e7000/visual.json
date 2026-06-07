@@ -4,10 +4,10 @@
   "position": {
     "x": 53.884785819793208,
     "y": 965.672082717873,
-    "z": 10000,
+    "z": 9000,
     "height": 422.57016248153622,
     "width": 1854.7710487444608,
-    "tabOrder": 10000
+    "tabOrder": 9000
   },
   "visual": {
     "visualType": "lineChart",
@@ -15,6 +15,36 @@
       "queryState": {
         "Category": {
           "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "month"
+                }
+              },
+              "queryRef": "dim_date.month",
+              "nativeQueryRef": "month",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "week_of_year"
+                }
+              },
+              "queryRef": "dim_date.week_of_year",
+              "nativeQueryRef": "week_of_year",
+              "active": false
+            },
             {
               "field": {
                 "Column": {
@@ -36,23 +66,17 @@
           "projections": [
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "fact_holdings"
-                        }
-                      },
-                      "Property": "market_value_eur"
+                    "SourceRef": {
+                      "Entity": "#Measures"
                     }
                   },
-                  "Function": 0
+                  "Property": "Ending Portfolio Value EUR"
                 }
               },
-              "queryRef": "Sum(fact_holdings.market_value_eur)",
-              "nativeQueryRef": "market_value_eur",
-              "displayName": "market_value_eur"
+              "queryRef": "#Measures.Ending Portfolio Value EUR",
+              "nativeQueryRef": "Ending Portfolio Value EUR"
             }
           ]
         },
@@ -90,7 +114,7 @@
                     "Entity": "dim_date"
                   }
                 },
-                "Property": "full_date"
+                "Property": "month"
               }
             },
             "direction": "Ascending"
@@ -183,7 +207,7 @@
             "strokeWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "2D"
+                  "Value": "3D"
                 }
               }
             },
@@ -193,6 +217,13 @@
                   "Value": "'solid'"
                 }
               }
+            },
+            "areaShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
             }
           },
           "selector": {
@@ -200,27 +231,42 @@
           }
         },
         {
-          "properties": {}
+          "properties": {
+            "areaShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
         },
         {
           "properties": {
-            "strokeWidth": {
-              "expr": {
-                "Literal": {
-                  "Value": "5D"
-                }
-              }
-            },
-            "showMarker": {
+            "areaShow": {
               "expr": {
                 "Literal": {
                   "Value": "false"
                 }
               }
+            },
+            "areaMatchStrokeColor": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "strokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
             }
           },
           "selector": {
-            "metadata": "Sum(fact_holdings.market_value_eur)"
+            "metadata": "#Measures.Ending Portfolio Value EUR"
           }
         }
       ],
@@ -231,6 +277,32 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.1
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             }
@@ -323,6 +395,13 @@
                   }
                 }
               }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "91D"
+                }
+              }
             }
           },
           "selector": {
@@ -331,13 +410,20 @@
         },
         {
           "properties": {
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "78D"
+                }
+              }
+            },
             "fill": {
               "solid": {
                 "color": {
                   "expr": {
                     "ThemeDataColor": {
                       "ColorId": 6,
-                      "Percent": 0.2
+                      "Percent": 0
                     }
                   }
                 }
@@ -345,7 +431,7 @@
             }
           },
           "selector": {
-            "metadata": "Sum(fact_holdings.market_value_eur)"
+            "metadata": "#Measures.Ending Portfolio Value EUR"
           }
         }
       ]
@@ -373,8 +459,8 @@
                 "color": {
                   "expr": {
                     "ThemeDataColor": {
-                      "ColorId": 0,
-                      "Percent": 0
+                      "ColorId": 2,
+                      "Percent": -0.25
                     }
                   }
                 }
@@ -383,7 +469,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "11D"
                 }
               }
             },
@@ -397,7 +483,7 @@
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'wf_standard-font, helvetica, arial, sans-serif'"
+                  "Value": "'''Segoe UI Bold'', wf_segoe-ui_bold, helvetica, arial, sans-serif'"
                 }
               }
             }
