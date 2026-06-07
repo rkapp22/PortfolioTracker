@@ -1,0 +1,120 @@
+table #Measures
+	lineageTag: 7d81cf73-63a4-4559-ac19-2765fee945f7
+
+	measure 'Latest Market Value EUR' =
+			
+			VAR LatestDateKey =
+			    CALCULATE (
+			        MAX ( fact_holdings[date_key] ),
+			        ALL ( fact_holdings )
+			    )
+			RETURN
+			    CALCULATE (
+			        SUM ( fact_holdings[market_value_eur] ),
+			        fact_holdings[date_key] = LatestDateKey
+			    )
+		formatString: #,0\ "€";-#,0\ "€";#,0\ "€"
+		lineageTag: 77c4135c-9b09-4493-a1b7-59e2a0d221e8
+
+	measure 'Portfolio Value EUR' =
+			
+			SUM ( fact_latest_holding[market_value_eur] )
+		lineageTag: f555de11-f014-4b7b-95dd-103486e8c354
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Beginning Portfolio Value EUR' =
+			
+			VAR StartDate =
+			    MIN ( dim_date[date_key] )
+			
+			VAR FirstAvailableDate =
+			    CALCULATE (
+			        MIN ( fact_holdings[date_key] ),
+			        fact_holdings[date_key] >= StartDate
+			    )
+			
+			RETURN
+			CALCULATE (
+			    SUM ( fact_holdings[market_value_eur] ),
+			    fact_holdings[date_key] = FirstAvailableDate
+			)
+		formatString: #,0\ "€";-#,0\ "€";#,0\ "€"
+		lineageTag: a3af9cb3-eb3f-4a40-81f8-94b7192ecd2b
+
+	measure 'Ending Portfolio Value EUR' =
+			
+			VAR EndDate =
+			    MAX ( dim_date[date_key] )
+			
+			VAR LastAvailableDate =
+			    CALCULATE (
+			        MAX ( fact_holdings[date_key] ),
+			        fact_holdings[date_key] <= EndDate
+			    )
+			
+			RETURN
+			CALCULATE (
+			    SUM ( fact_holdings[market_value_eur] ),
+			    fact_holdings[date_key] = LastAvailableDate
+			)
+		formatString: #,0\ "€";-#,0\ "€";#,0\ "€"
+		lineageTag: bcb18ca4-619f-4536-9f0f-8abf5b495aca
+
+	measure 'Net Cash Flow EUR' =
+			
+			SUMX (
+			    fact_transactions,
+			    SWITCH (
+			        TRUE(),
+			        fact_transactions[action] = "BUY",
+			            fact_transactions[quantity]
+			                * fact_transactions[price_per_unit]
+			                * fact_transactions[fx_rate_to_eur],
+			
+			        fact_transactions[action] = "SELL",
+			            - fact_transactions[quantity]
+			                * fact_transactions[price_per_unit]
+			                * fact_transactions[fx_rate_to_eur],
+			
+			        0
+			    )
+			)
+		formatString: 0.0
+		lineageTag: 3a5e3bd4-3d05-403f-8ccf-8428eb387f72
+
+	measure 'Koguportfelli tootlus EUR' =
+			
+			[Ending Portfolio Value EUR]
+			    - [Beginning Portfolio Value EUR]
+			    - [Net Cash Flow EUR]
+		formatString: #,0.0\ "€";-#,0.0\ "€";#,0.0\ "€"
+		lineageTag: c0abb9cf-e805-4dca-921d-ae64eb6e37a7
+
+	measure 'Koguportfelli tootlus %' =
+			
+			DIVIDE (
+			    [Koguportfelli tootlus EUR],
+			    [Beginning Portfolio Value EUR]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5b590133-25f0-446f-95d6-1c6ac003726f
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: fe7a4d88-f85e-42b8-8d30-ef4f0bc08df5
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition #Measures = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 4ab1d0afbb8644d6a5ea9ef537a7af47
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

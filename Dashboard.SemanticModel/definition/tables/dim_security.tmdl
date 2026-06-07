@@ -1,0 +1,73 @@
+table dim_security
+	lineageTag: e4316141-55b2-4017-a73c-36bf0545e8ec
+
+	column security_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 6770dbdc-165c-410d-ad66-409b4d61e8a0
+		summarizeBy: none
+		sourceColumn: security_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column ticker
+		dataType: string
+		lineageTag: e925b40d-8ed7-4dd6-a3ef-89972b37a623
+		summarizeBy: none
+		sourceColumn: ticker
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: dd05d376-7dd1-4445-a0ee-11410f1fac45
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column currency
+		dataType: string
+		lineageTag: 376ad107-da68-4bca-a469-3aceb18f7722
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 1094014a-e667-4ba3-a71a-7fec92d47ec5
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column sector
+		dataType: string
+		lineageTag: 7998021d-aacf-4ff2-b7d3-24a13abb1ace
+		summarizeBy: none
+		sourceColumn: sector
+
+		annotation SummarizationSetBy = Automatic
+
+	column asset_class
+		dataType: string
+		lineageTag: 601d3c61-95df-443b-b4c7-ae6442927e88
+		summarizeBy: none
+		sourceColumn: asset_class
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_security = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost:5432", "portfolio", [CreateNavigationProperties = false]),
+				  #"Navigation 1" = Source{[Schema = "dwh", Item = "dim_security"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
