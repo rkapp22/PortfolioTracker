@@ -13,9 +13,7 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 5. Realiseerimata kasum/kahjum - Avatud positsioonide hetkeseis
 6. Tehingute arv perioodis
 7. Keskmine hoidmisperiood 
-8. P/E Ratio - Price / Earnings
-9. Dividend Yield - Dividenditootlus
-10. Market Cap - Ettevõtte suurus
+8. Market Cap - Ettevõtte suurus
 
 ## Andmevoog
 
