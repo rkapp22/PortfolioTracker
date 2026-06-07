@@ -10,14 +10,13 @@
 - [x] Vähemalt üks transformatsioon toimib — `src/transform.py` teisendab staging andmed DWH tabeliteks, sh `dim_date`, `dim_security`, `fact_daily_prices`, `fact_transactions`, `fact_dividends` ja `fact_holdings`.
 - [x] Vähemalt üks näidikulaud on nähtaval — Power BI mudel ja `Dashboard.pbip` on olemas, aga käivitatav raporti kuvamine nõuab Power BI Desktopi ja ei ole automaatselt testitud.
 - [x] Vähemalt üks andmekvaliteedi test läbib — andmekvaliteedi testide kirjeldus on dokumentatsioonis, kuid testimine pole veel aktiveeritud ega käivitatud.
+- [x] Salvestatud ja esitatud projekt koos videoga 
 
 Kirjeldus: projektis on valmis andmete ingest, staging-kiht ja transformatsioonid; näidikulauda on võimalik avada Power BI-ga, kuid visuaalseid teste ei ole automatiseeritud. Andmekvaliteedi testide käivitamine jääb järgmise etapi tööks.
 
 ## Järgmised sammud
 
 - Viimistleda näidikulauda.
-- Täita README vastavalt antud mallile, lisades projekti eesmärgi, arhitektuuri, käivitamise ja testimise juhised.
-- Salvestada 10-minutiline video, mis sisaldab projekti lühitutvustust ja demo, kus näidatakse andmevoo tööd.
 
 ## Mis takistab
 

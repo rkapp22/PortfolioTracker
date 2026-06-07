@@ -8,14 +8,9 @@ Soov on luua isiklik väärtpaberiportfelli jälgimise lahendus ühe inimese por
 
 1. Portfelli kogutootlus (%) - Näitab kogu portfelli kasvu valitud perioodil
 2. Päevane / nädalane / kuine tootlus - Võimaldab jälgida lühiajalist muutust
-3. Average Buy price - kaalutud keskmine
-4. Realiseeritud kasum/kahjum - Kui palju kasumit teeniti müüdud positsioonidest
-5. Realiseerimata kasum/kahjum - Avatud positsioonide hetkeseis
-6. Tehingute arv perioodis
-7. Keskmine hoidmisperiood 
-8. P/E Ratio - Price / Earnings
-9. Dividend Yield - Dividenditootlus
-10. Market Cap - Ettevõtte suurus
+3. Realiseeritud kasum/kahjum - Kui palju kasumit teeniti müüdud positsioonidest
+4. Realiseerimata kasum/kahjum - Avatud positsioonide hetkeseis
+5. Tehingute arv perioodis
 
 ## Andmevoog
 
